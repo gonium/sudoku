@@ -9,9 +9,11 @@
 
 using namespace Gecode;
 
+// "star burst leo", http://en.wikipedia.org/wiki/Sudoku_algorithms
 static const int sudoku1 []={
 9,0,0,1,0,4,0,0,2,
 0,8,0,0,6,0,0,7,0,
+0,0,0,0,0,0,0,0,0,
 4,0,0,0,0,0,0,0,1,
 0,7,0,0,0,0,0,3,0,
 3,0,0,0,0,0,0,0,7,
@@ -29,6 +31,18 @@ class SudokuSolver : public Script {
     {
       Matrix<IntVarArray> m(sudoku_array, 9, 9);
 
+      std::cout << "Setup: Using sudoku1" << std::endl;
+      for (int i=0; i<9; i++){
+        for (int j=0; j<9; j++) {
+          int v = sudoku1[i*9 + j];
+          std::cout << " " << v;
+          if (v != 0)
+            rel(*this, m(j,i), IRT_EQ, v );
+        }
+        std::cout << std::endl;
+      }
+
+
       for(int i=0; i<9; i++)
         distinct(*this, m.row(i));
       for(int i=0; i<9; i++)
@@ -36,6 +50,8 @@ class SudokuSolver : public Script {
       for(int i=0; i<9; i+=3)
         for(int j=0; j<9; j+=3)
           distinct(*this, m.slice(i, i+3, j, j+3));
+
+      std::cout << "Setup of constraints complete." << std::endl << std::endl;
 
       branch(*this, sudoku_array, INT_VAR_SIZE_MIN, INT_VAL_MIN);
     }
