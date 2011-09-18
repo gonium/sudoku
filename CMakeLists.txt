@@ -57,6 +57,7 @@ include(FindGecode)
 
 # Reflect the package structure
 add_subdirectory(src)
+add_subdirectory(libsudoku)
 
 # add some files to the installation target
 INSTALL(FILES README LICENSE DESTINATION share/doc/sudoku)

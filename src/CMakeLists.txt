@@ -2,11 +2,14 @@
 set(sudokusolve_src sudokusolve.cpp)
 
 #include_directories(${CMAKE_SOURCE_DIR}/libflukso ${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}
+  )
 add_executable(sudokusolve ${sudokusolve_src})
 
 # Link the executable 
-target_link_libraries(sudokusolve ${GECODE_LIBRARY}
+target_link_libraries(sudokusolve sudoku ${GECODE_LIBRARY}
   ${GECODE_SUPPORT_LIBRARY}
   ${GECODE_SUPPORT_LIBRARY}
   ${GECODE_INT_LIBRARY}
