@@ -41,7 +41,7 @@ class SudokuSolver : public Script {
   protected:
     IntVarArray sudoku_array;
   public:
-    SudokuSolver(const Options& opt)
+    SudokuSolver(const int sudokuproblem[], size_t len)
       : sudoku_array(*this, 9*9, 1, 9)
     {
       Matrix<IntVarArray> m(sudoku_array, 9, 9);
@@ -49,7 +49,7 @@ class SudokuSolver : public Script {
       std::cout << "Setup: Using sudoku1" << std::endl;
       for (int i=0; i<9; i++){
         for (int j=0; j<9; j++) {
-          int v = sudoku1[i*9 + j];
+          int v = sudokuproblem[i*9 + j];
           std::cout << " " << v;
           if (v != 0)
             rel(*this, m(j,i), IRT_EQ, v );
@@ -93,11 +93,12 @@ class SudokuSolver : public Script {
 };
 
 int main(int argc, char* argv[]) {
-  // commandline options
-  Options opt("SudokuSolver");
-  opt.solutions(0);
-  opt.parse(argc,argv);
-  // run script
-  Script::run<SudokuSolver,DFS,Options>(opt);
+  SudokuSolver* s = new SudokuSolver(sudoku1, sizeof(sudoku1));
+  DFS<SudokuSolver> e(s);
+  delete s;
+  while (SudokuSolver* r = e.next()) {
+    r->print(std::cout);
+    delete r;
+  }
   return 0;
 }
